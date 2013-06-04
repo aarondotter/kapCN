@@ -4,6 +4,8 @@ June 2013
 This directory contains source code and data files necessary to use 
 the Lederer & Aringer (2009) enhanced C,N low-T opacities with MESA.
 
+Source code is under the LGPL.  See included file lgpl.txt.
+
 After compiling the library, installing the data files, and using
 the provided run_star_extras to produce a star executable you would
 add use_other_kap = .true. to your controls inlist to use kapCN.
