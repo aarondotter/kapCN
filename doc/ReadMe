@@ -1,0 +1,175 @@
+J/A+A/???/???    Low temperature Rosseland opacity coefficients (Lederer+, 2008)
+================================================================================
+Low temperature Rosseland opacities with 
+varied abundances of carbon and nitrogen
+       Lederer M.T., Aringer B.
+      <Astron. Astrophys. ???, ??? (2008)>
+      =2008A&A...???..???L
+================================================================================
+ADC_Keywords: Opacities
+Keywords: Radiative transfer - Molecular data - Stars: Evolution
+
+Abstract:
+    We provide low temperature opacity data that incorporate varied abundances 
+    of the elements carbon and nitrogen. In the temperature range that we focus 
+    at, molecules are the dominant opacity source. Our dataset spans a large 
+    metallicity range and shall deliver the necessary input data for stellar 
+    evolution models as well as other applications. We conduct chemical 
+    equilibrium calculations in order to evaluate the partial pressures of 
+    neutral atoms, ions and molecules. Based on a large dataset containing 
+    atomic line and continuum data, and, most importantly, a plethora of 
+    molecular lines, we subsequently calculate Rosseland mean opacity 
+    coefficients. This is done not only for a number of different metallicities,
+    but also for varied abundances of the isotopes ^{12}C and ^{14}N at each 
+    metallicity. The molecular data comprise the main opacity sources at either 
+    an oxygen-rich or carbon-rich chemistry. We tabulate the opacity 
+    coefficients as a function of temperature and, basically, density. Already 
+    within a certain chemistry regime an alteration in the carbon abundance 
+    causes, due to the special role of the CO molecule, considerable changes in 
+    the Rosseland opacity. The transition from a scaled solar (i.e. oxygen-rich)
+    mixture to the carbon-rich regime results in opacities that can, at low 
+    temperatures, be orders of magnitude different compared to the initial 
+    situation. The reason is that different molecular absorbers make up the mean
+    opacity in either case. A varying abundance of nitrogen has less pronounced 
+    effects but, nevertheless, cannot be neglected.
+
+Description:
+    The database of Rosseland opacities consists of 14 files (kR_Z?E-?.dat), one
+    for each metallicity. The available values of the metallicity are listed in
+    the file kR_Z_fCN.dat together with the respective enhancement factors for 
+    ^{12}C and ^{14}N. This file contains information equivalent to Table 3 from
+    the paper. The data files consist of a header indicating the abundances used
+    (Lodders 2003), the initial metallicity, the initial mass fractions for 
+    ^{12}C, ^{14}N and the alpha elements, and a look-up table for the actual 
+    data block. This block is made up of 63 rectangular data arrays where 
+    the logarithm of the Rosseland opacity (log {kappa}_R [cm^2 g^-1]) is 
+    tabulated as a function of the logarithm of the gas temperature (log T [K]) 
+    and the logarithm of R (log R [g cm^-3 K^-3 10^18], with R={rho}/(T_6)^3 and
+    T_6=T/(10^6 K)). The ranges covered are 3.2 <= log T <= 4.05 with a step 
+    size of 0.05, and -7.0 <= log R <= 1.0 with a step size of 0.5. The 63 
+    tables result from the variation of the hydrogen mass fraction 
+    (X=0.5,0.7,0.8), and the mass fractions X(^{12}C) [7 different values] and 
+    X(^{14}N) [3 different values]. The tables are ordered such that the mass 
+    fraction X(^{12}C) varies fastest followed by the hydrogen mass fraction 
+    and X(^{14}N). For future compatibility a data field for the alpha element 
+    enhancement factor was introduced in the look-up table.
+
+File Summary:
+--------------------------------------------------------------------------------
+ FileName      Lrecl    Records    Explanations
+--------------------------------------------------------------------------------
+ReadMe            80          .   This file
+kR_Z_fCN.dat      97         15   Metallicities contained in the database and
+                                   respective enhancement factors for C and N
+                                   (equivalent to Table 3 in the paper)
+kR_Z4E-2.dat     124       2164   Rosseland opacities for Z=4E-02 (Z=   0.04)
+kR_Z2E-2.dat     124       2164   Rosseland opacities for Z=2E-02 (Z=   0.02)
+kR_Z1E-2.dat     124       2164   Rosseland opacities for Z=1E-02 (Z=   0.01)
+kR_Z8E-3.dat     124       2164   Rosseland opacities for Z=8E-03 (Z=  0.008)
+kR_Z6E-3.dat     124       2164   Rosseland opacities for Z=6E-03 (Z=  0.006)
+kR_Z5E-3.dat     124       2164   Rosseland opacities for Z=5E-03 (Z=  0.005)
+kR_Z4E-3.dat     124       2164   Rosseland opacities for Z=4E-03 (Z=  0.004)
+kR_Z3E-3.dat     124       2164   Rosseland opacities for Z=3E-03 (Z=  0.003)
+kR_Z2E-3.dat     124       2164   Rosseland opacities for Z=2E-03 (Z=  0.002)
+kR_Z1E-3.dat     124       2164   Rosseland opacities for Z=1E-03 (Z=  0.001)
+kR_Z3E-4.dat     124       2164   Rosseland opacities for Z=3E-04 (Z= 0.0003)
+kR_Z1E-4.dat     124       2164   Rosseland opacities for Z=1E-04 (Z= 0.0001)
+kR_Z3E-5.dat     124       2164   Rosseland opacities for Z=3E-05 (Z=0.00003)
+kR_Z1E-5.dat     124       2164   Rosseland opacities for Z=1E-05 (Z=0.00001)
+--------------------------------------------------------------------------------
+
+Byte-by-byte Description of file: kR_Z_fCN.dat
+--------------------------------------------------------------------------------
+   Bytes Format Units   Label    Explanations
+--------------------------------------------------------------------------------
+   1-  7  F7.5  ---     Z        Metallicity (mass fraction)
+  10- 16  F7.1  ---     fC1      1st carbon enhancement factor
+  19- 25  F7.1  ---     fC2      2nd carbon enhancement factor
+  28- 34  F7.1  ---     fC3      3rd carbon enhancement factor
+  37- 43  F7.1  ---     fC4      4th carbon enhancement factor
+  46- 52  F7.1  ---     fC5      5th carbon enhancement factor
+  55- 61  F7.1  ---     fC6      6th carbon enhancement factor
+  64- 70  F7.1  ---     fC7      7th carbon enhancement factor
+  73- 79  F7.1  ---     fN1      1st nitrogen enhancement factor
+  82- 88  F7.1  ---     fN2      2nd nitrogen enhancement factor
+  91- 97  F7.1  ---     fN3      3rd nitrogen enhancement factor
+--------------------------------------------------------------------------------
+
+Description of files: kR_Z?E-?.dat
+--------------------------------------------------------------------------------
+The files containing the Rosseland opacity coefficients are not arranged in
+columns. The block structure is described in the following.
+
+FILE HEADER
+   Lines   Bytes   Format  Content
+    1- 3   ---     ---     Header lines
+    4      ---     ---     Solar abundances reference
+    5      \       ---     Initial metallicity
+    .       7-13   F7.5    Metallicity Z (mass fraction)
+    6      ---     ---     Comment line
+    7-15   \       ---     Initial mass fractions of relevant isotopes
+    .       6- 7   I2      Mass number
+    .       8- 9   A2      Element Symbol
+    .      15-25   E11.5   Mass fraction
+   16      ---     ---     Comment line
+   17      ---     ---     Blank line
+
+LOOK-UP TABLE
+   Lines   Bytes   Format  Content
+   18      ---     ---     Header line
+   19      ---     ---     Column labels
+   20-82   \       ---     Parameters of individual opacity tables
+    .       1- 2   I2      Table ID (running from 1 to 63)
+    .       6- 8   F3.1    Hydrogen mass fraction (X)
+    .      12-19   F8.6    Helium mass fraction (Y)
+    .      23-30   F8.6    Metal mass fraction (Z)
+    .      35-42   F8.3    C/O ratio
+    .      46-52   F7.1    Carbon (^{12}C) enhancement factor
+    .      56-62   F7.1    Nitrogen (^{14N}) enhancement factor
+    .      66-72   F7.1   *Alpha elements enhancement factor
+   83      ---     ---     Comment line
+
+DATA TABLES (the structure described below is repeated 63 times)
+   10 blank lines
+    1 comment line repeating the column labels from the look-up table
+    1 data line repeating the parameters from the look-up table
+    1 blank line
+
+    1 line containing the label "log R"
+    1 line containing...
+     - the label "log T"
+     - the values of log R from -7.0 to 1.0 
+       in the format (1X,F6.3) repeated 17 times
+   18 lines containing...
+     - the respective log T values from 3.2 to 4.05 in the format (F5.3)
+     - the values of log {kappa}_R
+       in the format (1X,F6.3) repeated 17 times
+
+    In symbolic form the Rosseland opacities as a function of
+    log T and log R are arranged in rectangular arrays like that:
+
+                     log R
+      log T -7.000   ...   1.000
+      3.200 ##.### ##.### ##.### 
+      ...   ##.### ##.### ##.###
+      4.050 ##.### ##.### ##.###
+
+    The respective opacity coefficient (represented by ##.###) is located at the
+    crossing point of the log R vs. log T grid.
+
+FILE FOOTER
+   Lines   Bytes   Format  Content
+ 2163      ---     ---     Blank line
+ 2164      ---     ---     Comment line
+--------------------------------------------------------------------------------
+Note on the alpha elements enhancement factor: this factor is always 1 in the
+    current version of the database. It was introduced for future compatibility.
+--------------------------------------------------------------------------------
+
+Acknowledgements: Michael T. Lederer <lederer@astro.univie.ac.at>
+
+References:
+  Lodders, 2003ApJ...591.1220L
+    Solar System Abundances and Condensation Temperatures of the Elements
+================================================================================
+(End)         Michael T. Lederer [University of Vienna, Austria]     12-Nov-2008

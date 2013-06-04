@@ -1,0 +1,3 @@
+set -x
+cp data/kR*.dat ../data/kap_data/
+set +x

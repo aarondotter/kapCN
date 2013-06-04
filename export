@@ -1,0 +1,4 @@
+set -x
+cp src/libkapCN.a ../lib/
+cp src/kapcn.mod ../include/
+set +x
