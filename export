@@ -1,4 +1,4 @@
 set -x
-cp src/libkapCN.a ../lib/
-cp src/kapcn.mod ../include/
+cp src/libkapCN.a $MESA_DIR/lib/
+cp src/kapcn.mod $MESA_DIR/include/
 set +x
