@@ -49,22 +49,31 @@
       call kapCN_interp(Z,X,fC,fN,logR,logT,result,ierr)
       call write_results
 
+      logR=-3.44343
+      logT=2.00
+      call kapCN_interp(Z,X,fC,fN,logR,logT,result,ierr)
+      call write_results
+
       call kapCN_shutdown
 
       contains 
 
       subroutine write_results
  1    format(a25,f11.6)
-      write(*,*)
-      write(*,1) ' X = ', X
-      write(*,1) ' Z = ', Z
-      write(*,1) 'fC = ', fC
-      write(*,1) 'fN = ', fN
-      write(*,1) 'logR=', logR
-      write(*,1) 'logT=', logT
-      write(*,1) 'log(kap)=', result(1)
-      write(*,1) 'dlog(kap)/dlogT=', result(2)
-      write(*,1) 'dlog(kap)/dlogR=', result(3)
+      if(ierr==0)then
+         write(*,*)
+         write(*,1) ' X = ', X
+         write(*,1) ' Z = ', Z
+         write(*,1) 'fC = ', fC
+         write(*,1) 'fN = ', fN
+         write(*,1) 'logR=', logR
+         write(*,1) 'logT=', logT
+         write(*,1) 'log(kap)=', result(1)
+         write(*,1) 'dlog(kap)/dlogT=', result(2)
+         write(*,1) 'dlog(kap)/dlogR=', result(3)
+      else
+         write(*,*) 'there was a problem!'
+      endif
       write(*,*) 'ierr = ', ierr
       write(*,*)
       end subroutine write_results

@@ -5,7 +5,8 @@
             kap, dln_kap_dlnRho, dln_kap_dlnT, ierr)
          
          use kap_lib, only: kap_get_Type1
-
+         
+         implicit none
          ! INPUT
          integer, intent(in) :: id ! star id if available; 0 otherwise
          integer, intent(in) :: k ! cell number or 0 if not for a particular cell         
@@ -80,37 +81,33 @@
          integer, intent(out) :: ierr ! 0 means AOK.
                   
          logical, parameter :: debug=.false.
+         logical :: try_kapCN
          real(dp) :: log10_R
 
          !for converting sp <-> dp
          real(sp) :: Z_sp, X_sp, fC, fN, logRho_sp, logT_sp
          real(sp) :: kap_sp, dlnkap_dlnRho_sp, dlnkap_dlnT_sp
 
+         ierr=99
          log10_R = log10_Rho - 3*log10_T + 18d0
+         
+         try_kapCN = X_C_init > 0d0 .and. X_N_init > 0d0 .and. log10_T < 4d0
 
-         if(log10_T > 4.05d0 .or. log10_R > 1d0)then !use MESA Type2
-
-            call kap_get_Type2( &
-            handle, zbar, X, Z, Zbase, XC, XN, XO, XNe, &
-            log10_rho, log10_T,&
-            lnfree_e, d_lnfree_e_dlnRho, d_lnfree_e_dlnT, &
-            frac_Type2, kap, dln_kap_dlnRho, dln_kap_dlnT, ierr)
-
-         else  !use C,N-enhanced low-T opacities:
+         if(try_kapCN)then
 
             Z_sp=real(Zbase,sp); X_sp=real(X,sp); 
             logRho_sp=real(log10_Rho,sp); logT_sp=real(log10_T,sp)
 
-            !Lederer & Aringer tables use Lodders 2003 
-            fC=real(XC/(Zbase*L03_element_zfrac(e_C)),sp)
-            fN=real(XN/(Zbase*L03_element_zfrac(e_N)),sp)
+            !Lederer & Aringer tables use Lodders (2003) abundance scale
+            fC=real(XC/X_C_init,sp)
+            fN=real(XN/X_N_init,sp)
 
             call kapCN_get(Z_sp,X_sp,fC,fN,logRho_sp,logT_sp,kap_sp, &
                            dlnkap_dlnRho_sp, dlnkap_dlnT_sp, ierr)
 
             if(debug.or.kap_sp==1.0)then
                write(*,*) 'logRho=',log10_Rho
-               write(*,*) 'logR=',log10_Rho - 3*log10_T +18d0
+               write(*,*) 'logR=',log10_R
                write(*,*) 'logT=',log10_T
                write(*,*) 'XC=', XC
                write(*,*) 'XN=', XN
@@ -120,13 +117,26 @@
                write(*,*) 'fC=', fC
                write(*,*) 'fN=', fN
                write(*,*) 'kap_sp=', kap_sp
+               write(*,*) 'X_C_init=', X_C_init
+               write(*,*) 'X_N_init=', X_N_init
+               write(*,*) 'ierr=', ierr
                write(*,*)
             endif
 
-            kap = real(kap_sp,dp)
-            dln_kap_dlnRho = real(dlnkap_dlnRho_sp,dp)
-            dln_kap_dlnT = real(dlnkap_dlnT_sp,dp)
-            
+            if(ierr==0)then
+               kap = real(kap_sp,dp)
+               dln_kap_dlnRho = real(dlnkap_dlnRho_sp,dp)
+               dln_kap_dlnT = real(dlnkap_dlnT_sp,dp)
+            endif
+
+         endif
+
+         if(.not.try_kapCN .or. ierr/=0)then
+            call kap_get_Type2( &
+            handle, zbar, X, Z, Zbase, XC, XN, XO, XNe, &
+            log10_rho, log10_T,&
+            lnfree_e, d_lnfree_e_dlnRho, d_lnfree_e_dlnT, &
+            frac_Type2, kap, dln_kap_dlnRho, dln_kap_dlnT, ierr)
          endif
 
          frac_Type2 = 1

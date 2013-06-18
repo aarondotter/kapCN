@@ -31,6 +31,7 @@
       real(sp), target :: kapCN_fC(num_fC,num_Z)
       real(sp), target :: kapCN_X(num_X)
       real(sp), target :: kapCN_logT(num_logT), kapCN_logR(num_logR)
+      real(sp) :: kapCN_min_logR, kapCN_max_logR, kapCN_min_logT, kapCN_max_logT
 
       !Z mass fractions of C and N
       real(sp) :: zC=0.1644, zN=0.0532 
@@ -137,6 +138,11 @@
          call read_one_table(i,ierr)
       enddo
 
+      kapCN_min_logR = minval(kapCN_logR)
+      kapCN_max_logR = maxval(kapCN_logR)
+      kapCN_min_logT = minval(kapCN_logT)
+      kapCN_max_logT = maxval(kapCN_logT)
+
       end subroutine read_kapCN_tables
 
 
@@ -148,7 +154,7 @@
       character(len=10) :: my_Z
       integer :: i, io, j
       real(sp) :: c_div_o, y
-      real(sp) :: table(num_logR,num_logT) !, logR(num_logR), logT(num_logT)
+      real(sp) :: table(num_logR,num_logT)
       real(sp), pointer :: logR(:), logT(:)
       logical :: have_cache
       type(kapCN_set), pointer :: k
@@ -257,6 +263,7 @@
 
       end subroutine read_one_table
 
+
       !this one is specifically for use with MESA
       subroutine kapCN_get(Z,X,fC,fN,logRho,logT,kappa, &
                            dlnkap_dlnRho,dlnkap_dlnT,ierr)
@@ -266,7 +273,8 @@
       integer, intent(out) :: ierr
       real(sp) :: logR, result(3)
 
-      logR = logRho - 3.0*logT + 18.0      
+      ierr = 0
+      logR = logRho - 3.0*logT + 18.0
 
       call kapCN_interp(Z,X,fC,fN,logR,logT,result,ierr)
       if(ierr==0)then
@@ -274,7 +282,7 @@
          dlnkap_dlnRho = result(2)
          dlnkap_dlnT = result(3) - 3*result(2)
       else
-         kapp = -1d0
+         kappa = -1d0
          dlnkap_dlnRho = 0d0
          dlnkap_dlnT = 0d0
       endif
@@ -299,6 +307,11 @@
       if(.not.kapCN_is_initialized)then
          write(*,*) ' kapCN is not initialized; call kapCN_init()'
          ierr=-99
+         return
+      endif
+
+      if(outside_R_and_T_bounds(logR,logT))then
+         ierr=-1
          return
       endif
 
@@ -333,6 +346,14 @@
       deallocate(work1)
 
       end subroutine kapCN_interp
+
+
+      logical function outside_R_and_T_bounds(logR,logT)
+      real(sp), intent(in) :: logR, logT     
+      outside_R_and_T_bounds = &
+         logR < kapCN_min_logR .or. logR > kapCN_max_logR .or. &
+         logT < kapCN_min_logT .or. logT > kapCN_max_logT
+      end function outside_R_and_T_bounds
 
 
       subroutine kapCN_interp_fixedZ(iZ,X,fC,fN,logR,logT,result)

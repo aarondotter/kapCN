@@ -29,6 +29,8 @@
 
       implicit none
       
+      double precision :: X_C_init, X_N_init
+
       ! these routines are called by the standard run_star check_model
       contains
       
@@ -48,12 +50,15 @@
          
          s% other_kap_get_Type1 => kapCN_get_Type1
          s% other_kap_get_Type2 => kapCN_get_Type2
+         
+         X_C_init = 0; X_N_init = 0
 
       end subroutine extras_controls
       
       
       integer function extras_startup(s, id, restart, ierr)
       use kapCN, only: kapCN_init
+      use chem_def, only: ic12, in14
          type (star_info), pointer :: s
          integer, intent(in) :: id
          logical, intent(in) :: restart
@@ -65,6 +70,10 @@
          else ! it is a restart
             call unpack_extra_info(s)
          end if
+
+         X_C_init = s% xa(s% net_iso(ic12),1)
+         X_N_init = s% xa(s% net_iso(in14),1)
+
       end function extras_startup
       
 
