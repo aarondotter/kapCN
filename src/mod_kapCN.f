@@ -269,9 +269,15 @@
       logR = logRho - 3.0*logT + 18.0      
 
       call kapCN_interp(Z,X,fC,fN,logR,logT,result,ierr)
-      kappa = 10.0**result(1) 
-      dlnkap_dlnRho = result(2)
-      dlnkap_dlnT = result(3) - 3*result(2)
+      if(ierr==0)then
+         kappa = 10.0**result(1) 
+         dlnkap_dlnRho = result(2)
+         dlnkap_dlnT = result(3) - 3*result(2)
+      else
+         kapp = -1d0
+         dlnkap_dlnRho = 0d0
+         dlnkap_dlnT = 0d0
+      endif
       
       end subroutine kapCN_get
 
