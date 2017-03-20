@@ -35,7 +35,7 @@ $(LIB): $(LIB_OBJS)
 $(TEST): $(TEST_OBJS)
 	$(LOADER) $(FCopenmp) -o $(TEST) $^ $(INCLUDE) $(LOAD_LOCAL) $(LOAD_OTHER)
 
-%.o: %.f90
+%.o: ../src/%.f90
 	$(COMPILE_TO_TEST) $(FCopenmp) $(FCfree) $(INCLUDE) -c $<
 
 check: $(TEST)

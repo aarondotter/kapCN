@@ -1,1 +1,1 @@
-cd src; make
+cd make; make
