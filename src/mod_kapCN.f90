@@ -6,7 +6,8 @@
 
       module kapCN
 
-      use const_def, only: sp, mesa_data_dir
+      use const_def, only: sp, dp, mesa_data_dir
+      use crlibm_lib, only: exp10_cr
       use utils_lib, only: alloc_iounit, free_iounit
       use num_lib, only: binary_search_sg
       
@@ -25,7 +26,7 @@
       integer, parameter :: num_logT = 18
       integer, parameter :: num_logR = 17
       integer, parameter :: tbl_size = num_logR*num_logT
-
+     
       real(sp), target :: kapCN_Z(num_Z)
       real(sp), target :: kapCN_fN(num_fN,num_Z)
       real(sp), target :: kapCN_fC(num_fC,num_Z)
@@ -278,7 +279,7 @@
 
       call kapCN_interp(Z,X,fC,fN,logR,logT,result,ierr)
       if(ierr==0)then
-         kappa = 10.0**result(1) 
+         kappa = real(exp10_cr(real(result(1),kind=dp)),kind=sp)
          dlnkap_dlnRho = result(2)
          dlnkap_dlnT = result(3) - 3*result(2)
       else
@@ -301,7 +302,8 @@
       integer, parameter :: nZ = 4
       integer :: i,iZ
       real(sp) :: my_Z, res(3,nZ), x_new(1), v_new(1)
-
+      character(len=32) :: junk
+      
       result=0.0; iZ=0; ierr=0
 
       if(.not.kapCN_is_initialized)then
@@ -311,6 +313,7 @@
       endif
 
       if(outside_R_and_T_bounds(logR,logT))then
+         write(*,*) 'kapCN_interp: logR, logT outside of table bounds'
          ierr=-1
          return
       endif
@@ -339,7 +342,7 @@
          call interpolate_vector_sg(nZ,log10(Z_ary(iZ-1:iZ+2)), 1, &
                                     x_new, res(i,:), v_new, &
                                     interp_pm_sg, pm_work_size, &
-                                    work1, ierr )
+                                    work1, junk, ierr )
          result(i)=v_new(1)
       enddo
       

@@ -2,6 +2,7 @@
 
       use const_def, only: sp
       use const_lib, only: const_init
+      use crlibm_lib, only: crlibm_init
       use kapCN
 
       implicit none
@@ -12,6 +13,7 @@
 
       data_dir = '' !means use mesa_data_dir
       call const_init(data_dir,ierr)
+      call crlibm_init
       call kapCN_init(ierr)
       if(ierr/=0) write(*,*) ' ierr = ', ierr
 
