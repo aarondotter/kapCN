@@ -30,12 +30,12 @@
       real(sp), target :: kapCN_Z(num_Z)
       real(sp), target :: kapCN_fN(num_fN,num_Z)
       real(sp), target :: kapCN_fC(num_fC,num_Z)
-      real(sp), target :: kapCN_X(num_X)
+      real(sp), target :: kapCN_X(num_X)  = [ 0.5, 0.7, 0.8 ]
       real(sp), target :: kapCN_logT(num_logT), kapCN_logR(num_logR)
       real(sp) :: kapCN_min_logR, kapCN_max_logR, kapCN_min_logT, kapCN_max_logT
 
-      !Z mass fractions of C and N
-      real(sp) :: zC=0.1644, zN=0.0532 
+      !Z mass fractions of C and N, unused
+      !real(sp) :: zC=0.1644, zN=0.0532 
 
       logical, parameter :: debug = .false., use_cache = .true.
       logical :: kapCN_is_initialized = .false.
@@ -45,7 +45,7 @@
 
       !for 2-D interpolation
       integer :: ibcx=0, ibcy=0, ilinx=1, iliny=1
-      integer :: ict(6)
+      integer :: ict(6) = [ 1, 1, 1, 0, 0, 0 ]
       real(sp), parameter :: bc(num_logT) = 0.0
 
       !stores a table for one {Z,X,fC,fN}
@@ -76,12 +76,10 @@
       integer :: iZ
       type(kapCN_set), pointer :: k
 
-      !set X values
-      kapCN_X = [ 0.5, 0.7, 0.8 ]
-      ict = [ 1, 1, 1, 0, 0, 0 ] ! interp_evbicub: yields f, df/dR, df/dT
-
       if(len_trim(mesa_data_dir)==0)then
-         stop ' Need to set data_dir with call to const_init!'
+         write(0,*) ' Need to set data_dir with call to const_init!'
+         ierr=-1
+         return
       else
          kapCN_data_dir = mesa_data_dir
       endif
