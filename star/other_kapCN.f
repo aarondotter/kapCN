@@ -19,7 +19,6 @@
          integer, intent(in) :: species
          integer, pointer :: chem_id(:) ! maps species to chem id
             ! index from 1 to species
-            ! value is between 1 and num_chem_isos         
          integer, pointer :: net_iso(:) ! maps chem id to species number
             ! index from 1 to num_chem_isos (defined in chem_def)
             ! value is 0 if the iso is not in the current net
