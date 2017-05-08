@@ -311,7 +311,7 @@
       endif
 
       if(outside_R_and_T_bounds(logR,logT))then
-         write(*,*) 'kapCN_interp: logR, logT outside of table bounds'
+         !write(*,*) 'kapCN_interp: logR, logT outside of table bounds'
          ierr=-1
          return
       endif
