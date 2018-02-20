@@ -47,14 +47,14 @@
       call kapCN_interp(Z,X,fC,fN,logR,logT,result,ierr)
       call write_results
 
-      logR=1.05
-      call kapCN_interp(Z,X,fC,fN,logR,logT,result,ierr)
-      call write_results
-
-      logR=-3.44343
-      logT=2.00
-      call kapCN_interp(Z,X,fC,fN,logR,logT,result,ierr)
-      call write_results
+!!$      logR=1.05
+!!$      call kapCN_interp(Z,X,fC,fN,logR,logT,result,ierr)
+!!$      call write_results
+!!$
+!!$      logR=-3.44343
+!!$      logT=2.00
+!!$      call kapCN_interp(Z,X,fC,fN,logR,logT,result,ierr)
+!!$      call write_results
 
       call kapCN_shutdown
 
@@ -76,7 +76,6 @@
       else
          write(*,*) 'there was a problem!'
       endif
-      write(*,*) 'ierr = ', ierr
       write(*,*)
       end subroutine write_results
 

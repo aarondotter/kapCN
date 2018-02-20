@@ -17,20 +17,20 @@
 
       public :: kapCN_init, kapCN_shutdown, kapCN_interp, kapCN_get
 
-      integer, parameter :: num_X = 3
-      integer, parameter :: num_Z = 14
-      integer, parameter :: num_fC = 7
-      integer, parameter :: num_fN = 3
+      integer, parameter :: num_kapCN_Xs = 3
+      integer, parameter :: num_kapCN_Zs = 14
+      integer, parameter :: num_kapCN_fCs = 7
+      integer, parameter :: num_kapCN_fNs = 3
       integer, parameter :: num_falpha = 1 !not useful yet
-      integer, parameter :: num_tbl = num_X*num_fC*num_fN ! 63
+      integer, parameter :: num_tbl = num_kapCN_Xs*num_kapCN_fCs*num_kapCN_fNs ! 63
       integer, parameter :: num_logT = 18
       integer, parameter :: num_logR = 17
       integer, parameter :: tbl_size = num_logR*num_logT
      
-      real(sp), target :: kapCN_Z(num_Z)
-      real(sp), target :: kapCN_fN(num_fN,num_Z)
-      real(sp), target :: kapCN_fC(num_fC,num_Z)
-      real(sp), target :: kapCN_X(num_X)  = [ 0.5, 0.7, 0.8 ]
+      real(sp), target :: kapCN_Z(num_kapCN_Zs)
+      real(sp), target :: kapCN_fN(num_kapCN_fNs,num_kapCN_Zs)
+      real(sp), target :: kapCN_fC(num_kapCN_fCs,num_kapCN_Zs)
+      real(sp), target :: kapCN_X(num_kapCN_Xs)  = [ 0.5, 0.7, 0.8 ]
       real(sp), target :: kapCN_logT(num_logT), kapCN_logR(num_logR)
       real(sp) :: kapCN_min_logR, kapCN_max_logR, kapCN_min_logT, kapCN_max_logT
 
@@ -63,11 +63,11 @@
          character(len=12) :: filename
          logical :: not_loaded_yet
          real(sp) :: Zbase
-         real(sp) :: fC(num_fC)
-         real(sp) :: fN(num_fN)
+         real(sp) :: fC(num_kapCN_fCs)
+         real(sp) :: fN(num_kapCN_fNs)
          type(KapCN_Table) :: t(num_tbl)
       end type KapCN_Set
-      type(KapCN_Set), target :: kCN(num_Z)
+      type(KapCN_Set), target :: kCN(num_kapCN_Zs)
       
       contains
 
@@ -84,7 +84,7 @@
          kapCN_data_dir = mesa_data_dir
       endif
       
-      do iZ=1,num_Z
+      do iZ=1,num_kapCN_Zs
          k => kCN(iZ)
          k% not_loaded_yet = .true.
          k% Zbase = kapCN_Z(iZ)
@@ -102,8 +102,8 @@
       subroutine read_kapCN_tables(ierr)
       integer, intent(out) :: ierr
       character(len=256) :: filename
-      character(len=4) :: prefix, string_Z(num_Z), suffix
-      character(len=5) :: tmp_Z
+      character(len=4) :: prefix, string_Z(num_kapCN_Zs), suffix
+      character(len=6) :: tmp_Z
       integer :: i, io
       
       io=alloc_iounit(ierr)
@@ -120,20 +120,20 @@
 
       open(io,file=trim(filename))
       read(io,*) !skip first line
-      do i=num_Z,1,-1 !read backwards into array so Z is increasing
+      do i=num_kapCN_Zs,1,-1 !read backwards into array so Z is increasing
          read(io,'(f7.5,11f9.1)') kapCN_Z(i), kapCN_fC(:,i), kapCN_fN(:,i)
       enddo
       close(io)
       call free_iounit(io)
 
-      do i=1,num_Z
-         write(tmp_Z,'(1p,1e5.0e1)') kapCN_Z(i)
-         string_Z(i) = tmp_Z(1:1) // tmp_Z(3:5)
+      do i=1,num_kapCN_Zs
+         write(tmp_Z,'(1p,1e6.1e1)') kapCN_Z(i)
+         string_Z(i) = tmp_Z(1:1) // tmp_Z(4:6)
       enddo
 
       kCN(:)% filename = prefix // string_Z // suffix
       
-      do i=1,num_Z
+      do i=1,num_kapCN_Zs
          call read_one_table(i,ierr)
       enddo
 
@@ -317,9 +317,9 @@
       endif
 
       Z_ary => kapCN_Z
-      my_Z = max(min(Z,Z_ary(num_Z)),Z_ary(1))
-      iZ=binary_search_sg(num_Z,Z_ary, iZ, Z)
-      iZ = max(nz/2,min(iZ,num_Z-nz/2))
+      my_Z = max(min(Z,Z_ary(num_kapCN_Zs)),Z_ary(1))
+      iZ=binary_search_sg(num_kapCN_Zs,Z_ary, iZ, Z)
+      iZ = max(nz/2,min(iZ,num_kapCN_Zs-nz/2))
       
       !check to see if exact match in Z, then just need one call
       if(Z==Z_ary(iZ))then
@@ -362,8 +362,8 @@
       integer, intent(in) :: iZ
       real(sp), intent(in) :: X, fC, fN, logR, logT
       real(sp), intent(out) :: result(3)
-      integer, parameter :: my_num_fC = 3, f1=num_fC*num_X, f2=num_fC
-      real(sp) :: my_X, my_fC, my_fN, wX(num_X), wfN(num_fN), wfC(my_num_fC)
+      integer, parameter :: my_num_kapCN_fCs = 3, f1=num_kapCN_fCs*num_kapCN_Xs, f2=num_kapCN_fCs
+      real(sp) :: my_X, my_fC, my_fN, wX(num_kapCN_Xs), wfN(num_kapCN_fNs), wfC(my_num_kapCN_fCs)
       real(sp) :: res(3)
       integer :: iX, ifC, ifN, i,j,tbl,n,nlo,nhi,ierr
       real(sp), pointer :: X_ary(:), fC_ary(:), fN_ary(:)
@@ -372,30 +372,30 @@
       X_ary => kapCN_X; fC_ary => kapCN_fC(:,iZ); fN_ary => kapCN_fN(:,iZ)
 
       !limit input quantities to lie within tabulated range
-      my_X = max(min(X, X_ary(num_X)),X_ary(1))
-      my_fC = max(min(fC,fC_ary(num_fC)),fC_ary(1))
-      my_fN = max(min(fN,fN_ary(num_fN)),fN_ary(1))
+      my_X = max(min(X, X_ary(num_kapCN_Xs)),X_ary(1))
+      my_fC = max(min(fC,fC_ary(num_kapCN_fCs)),fC_ary(1))
+      my_fN = max(min(fN,fN_ary(num_kapCN_fNs)),fN_ary(1))
 
       !locate inputs in arrays
-      iX = binary_search_sg(num_X, X_ary, iX, my_X)
-      ifC= binary_search_sg(num_fC, fC_ary, ifC, my_fC)
-      ifN= binary_search_sg(num_fN, fN_ary, ifN, my_fN)
+      iX = binary_search_sg(num_kapCN_Xs, X_ary, iX, my_X)
+      ifC= binary_search_sg(num_kapCN_fCs, fC_ary, ifC, my_fC)
+      ifN= binary_search_sg(num_kapCN_fNs, fN_ary, ifN, my_fN)
 
-      !make sure 1 < ifC < num_fC
-      ifC = max(2,min(ifC,num_fC-1))
+      !make sure 1 < ifC < num_kapCN_fCs
+      ifC = max(2,min(ifC,num_kapCN_fCs-1))
 
       !interpolation coefficients in X
-      call interp(X_ary,wX,my_X,num_X)
+      call interp(X_ary,wX,my_X,num_kapCN_Xs)
 
       !interpolation coefficients in fN
-      call interp(fN_ary(:),wfN,my_fN,num_fN)
+      call interp(fN_ary(:),wfN,my_fN,num_kapCN_fNs)
 
       !interpolation coefficients in fC
-      call interp(fC_ary(ifC-1:ifC+1),wfC,my_fC,my_num_fC)
+      call interp(fC_ary(ifC-1:ifC+1),wfC,my_fC,my_num_kapCN_fCs)
 
-      do i=1,num_fN
-         do j=1,num_X
-            do n=1,my_num_fC
+      do i=1,num_kapCN_fNs
+         do j=1,num_kapCN_Xs
+            do n=1,my_num_kapCN_fCs
                res=0.0
                tbl = f1*(i-1) + f2*(j-1) + (ifC+n-2)
                nlo = 3*(n-1)+1
